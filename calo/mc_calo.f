@@ -26,7 +26,7 @@ C-______________________________________________________________________________
 ! Spectrometer definitions
 
 	integer*4 spectr
-	parameter (spectr = 7)		!calo is spec #7.
+	parameter (spectr = 7)		!calo is spec #7 or 8.
 	integer*4 spect_side ! 7 (HMS side) or 8 (SOS side)
 
 ! Collimator (octagon) dimensions.
@@ -36,10 +36,10 @@ C-______________________________________________________________________________
 
 
 ! No collimator, but use collimator dimensions to define calo
-	parameter (h_entr = 64.0)
-	parameter (v_entr = 109.0)
-	parameter (h_exit = 64.0)
-	parameter (v_exit = 109.0)
+	parameter (h_entr = 20.0)
+	parameter (v_entr = 50.0)
+	parameter (h_exit = 20.0)
+	parameter (v_exit = 50.0)
 
 ! Math constants
 
@@ -133,11 +133,11 @@ C-______________________________________________________________________________
 
 c Assume a position resolution of 0.5cm and energy resolution of 10%
 c
-	  x_fp = xs + 0.5 * gauss1(99.0)
-	  y_fp = ys + 0.5 * gauss1(99.0)
-	  ps = p*(1.0 + 0.10/sqrt(p/1000.0)*gauss1(99.0))
-	  write(*,*) ' elect mom = ',p,ps,(p-ps)/p
-	  dpps = (ps/p_spec-1.0)*100.0
+c	  x_fp = xs + 0.5 * gauss1(99.0)
+c	  y_fp = ys + 0.5 * gauss1(99.0)
+c	  ps = p*(1.0 + 0.10/sqrt(p/1000.0)*gauss1(99.0))
+c	  write(*,*) ' elect mom = ',p,ps,(p-ps)/p
+c	  dpps = (ps/p_spec-1.0)*100.0
 
 
 
@@ -146,8 +146,8 @@ c no difference between recon angle and "focal plane" angles
 c use the z position determined by the hadron arm to
 c correct the distance from the beam interaction point to the hit in the calo
 c
-	   delta_y = -prot_zbeam*stheta
-	   delta_z =  prot_zbeam*ctheta
+	   delta_y = 0
+	   delta_z =  0
 c   
 	  dx_fp = (x_fp-fry)/(drift_to_cal-delta_z)
 	  dy_fp = (y_fp-delta_y)/(drift_to_cal-delta_z)
@@ -160,18 +160,10 @@ c
 
 
 ! Reconstruct target quantities.
-	  call mc_calo_recon(dpp_recon,dth_recon,dph_recon,y_recon,fry,delta_y,delta_z,drift_to_cal)
+c	  call mc_calo_recon(dpp_recon,dth_recon,dph_recon,y_recon,fry,delta_y,delta_z,drift_to_cal)
 
-          if (using_tgt_field) then
-	     ok = .TRUE.
-	     call track_to_tgt(dpp_recon,y_recon,dph_recon,dth_recon,-frx,-fry,
-     >  	  -p,sqrt(m2),ctheta,-stheta,prot_zbeam,-1,ok)
-         endif
-! Fill output to return to main code
-	  dpp = dpp_recon
-	  dxdz = dph_recon
-	  dydz = dth_recon
-	  y = y_recon	  
+ ! Fill output to return to main code
+	  dpp = dpps
 	  ok_spec = .true.
 	  caloSTOP_successes = caloSTOP_successes + 1
 
