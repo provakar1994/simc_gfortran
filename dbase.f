@@ -237,10 +237,10 @@ C DJG:
 	  stop 'I dont know what phi should be for the electron arm'
 	endif
 
-	if (hadron_arm.eq.1 .or. hadron_arm.eq.3) then
+	if (hadron_arm.eq.1 .or. hadron_arm.eq.3.or. hadron_arm.eq.7) then
 	  spec%p%phi = 3*pi/2.
 	else if (hadron_arm.eq.2 .or. hadron_arm.eq.4 .or.
-     >		 hadron_arm.eq.5 .or. hadron_arm.eq.6) then
+     >		 hadron_arm.eq.5 .or. hadron_arm.eq.6.or. hadron_arm.eq.8) then
 	  spec%p%phi = pi/2.
 	else
 	  stop 'I dont know what phi should be for the hadron arm'
@@ -800,9 +800,9 @@ c	      stop
 	else if (electron_arm.eq.6) then
 	  write(6,*) '   SHMS is detecting electrons (LSA TUNE)'
 	else if (electron_arm.eq.7) then
-	  write(6,*) '   BIGCAL is detecting electrons (HMS side of beam)'
+	  write(6,*) '   Calo is detecting electrons (HMS side of beam)'
 	else if (electron_arm.eq.8) then
-	  write(6,*) '   BIGCAL is detecting electrons (SOS side of beam)'
+	  write(6,*) '   Calo is detecting electrons (SOS side of beam)'
 	endif
 
 	if (hadron_arm.eq.1) then
@@ -817,9 +817,10 @@ c	      stop
 	  write(6,*) '   SHMS is detecting hadrons (SSA TUNE)'
 	else if (hadron_arm.eq.6) then
 	  write(6,*) '   SHMS is detecting hadrons (LSA TUNE)'
-	else if (hadron_arm.eq.7 .or. hadron_arm.eq.8) then
-	  write(6,*) ' Cannot use Bigcal for hadrons'
-	  stop
+	else if (hadron_arm.eq.7) then
+	  write(6,*) ' Calo is detecting hadrons beam right'
+	else if (hadron_arm.eq.8) then
+	  write(6,*) ' Calo is detecting hadrons beam left'
 	endif
 
 	if (hadron_arm.eq.electron_arm) then
@@ -989,7 +990,8 @@ c	      stop
 	ierr = regparmdouble('sigc_kin_ind',sigc_kin_ind,0.0)
 	ierr = regparmint('using_tgt_field',using_tgt_field,0)
 	ierr = regparmstring('tgt_field_file',tgt_field_file,0)
-	ierr = regparmdouble('drift_to_cal',drift_to_cal,0)
+	ierr = regparmdouble('drift_to_cal',drift_to_cal,200)
+	ierr = regparmdouble('drift_to_cal2',drift_to_cal2,200)
 
 *	E_ARM_ACCEPT
 

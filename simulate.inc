@@ -45,7 +45,7 @@
 	real*8	luminosity, targetfac, normfac
 	real*8	wtcontribute, dE_edge_test, Egamma_gen_max
 	real*8  pt_b_param,sigc_kin_min,sigc_kin_max,sigc_kin_ind
-	real*8  targ_Bangle, targ_Bphi, targ_pol, drift_to_cal,sign_hadron
+	real*8  targ_Bangle, targ_Bphi, targ_pol, drift_to_cal, drift_to_cal2,sign_hadron
 	integer*4 sigc_flag,sigc_nbin
 
 	type(gen_limits)::	gen
@@ -84,7 +84,7 @@
      >    genvol, genvol_inclusive, luminosity, targetfac,
      >    normfac, wtcontribute, dE_edge_test, Egamma_gen_max,pt_b_param,
      >    sigc_kin_min,sigc_kin_max,sigc_kin_ind,targ_Bangle, targ_Bphi, targ_pol, 
-     >    drift_to_cal,sign_hadron,sigc_flag,sigc_nbin,
+     >    drift_to_cal,drift_to_cal2,sign_hadron,sigc_flag,sigc_nbin,
      >    gen, spec, cuts, edge, VERTEXedge, SPedge,
      >    slop, EXPER, mc_smear, debug, nevent, ntried, ngen,
      >    deForest_flag, Nntu, ncontribute, npasscuts, ncontribute_no_rad_proton, 

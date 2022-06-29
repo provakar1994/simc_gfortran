@@ -256,6 +256,30 @@ c	endif
 	  NtupleTag(m) = 'sigcc'	! 43
 	  m = m+1
 	  NtupleTag(m) = 'Weight'	! 44
+	  m = m+1
+	  NtupleTag(m) = 'p_e'	! 45
+	  m = m+1
+	  NtupleTag(m) = 'ux_e'	! 46
+	  m = m+1
+	  NtupleTag(m) = 'uy_e'	! 47
+	  m = m+1
+	  NtupleTag(m) = 'uz_e'	! 48
+	  m = m+1
+	  NtupleTag(m) = 'p_p'	! 49
+	  m = m+1
+	  NtupleTag(m) = 'ux_p'	! 50
+	  m = m+1
+	  NtupleTag(m) = 'uy_p'	! 51
+	  m = m+1
+	  NtupleTag(m) = 'uz_p'	! 52
+	  m = m+1
+	  NtupleTag(m) = 'th_e'	! 53
+	  m = m+1
+	  NtupleTag(m) = 'ph_e'	! 54
+	  m = m+1
+	  NtupleTag(m) = 'th_p'	! 55
+	  m = m+1
+	  NtupleTag(m) = 'ph_p'	! 56
 	endif
 
 !	else		!used to be the if (doing_phsp) option.

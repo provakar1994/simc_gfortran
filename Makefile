@@ -36,7 +36,7 @@ OBJ9	= $(R)mc_hrsr.o $(R)mc_hrsr_hut.o $(R)mc_hrsr_recon.o
 OBJA	= $(L)mc_hrsl.o $(L)mc_hrsl_hut.o $(L)mc_hrsl_recon.o
 OBJB	= $(SH)mc_shms.o $(SH)mc_shms_hut.o $(SH)mc_shms_recon.o
 OBJC    = $(T)Ctq5Pdf.o
-OBJD    = $(C)mc_calo.o $(C)mc_calo_recon.o
+OBJD    = $(C)mc_calo.o $(C)mc_calo2.o $(C)mc_calo_recon.o
 OBJCH   = $(CH)lfit.o $(CH)ranlux.o $(CH)fint.o $(CH)kerset.o $(CH)abend.o
 OBJF   = $(D)fdss.o
  

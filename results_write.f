@@ -225,6 +225,18 @@ c	  ntu(11) = vertex%p%xptar			!mr
 	  ntu(42) = ntup%radphot/1000.			!radphot - GeV
 	  ntu(43) = main%sigcc
 	  ntu(44) = main%weight
+	  ntu(45) = recon%e%p
+	  ntu(46) = recon%ue%x
+	  ntu(47) = recon%ue%y
+	  ntu(48) = recon%ue%z
+	  ntu(49) = recon%p%p
+	  ntu(50) = recon%up%x
+	  ntu(51) = recon%up%y
+	  ntu(52) = recon%up%z
+	  ntu(53) = recon%e%theta
+	  ntu(54) = recon%e%phi
+	  ntu(55) = recon%p%theta
+	  ntu(56) = recon%p%phi
 	endif
 
 c	call HFN(NtupleID,ntu)
