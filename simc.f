@@ -1474,8 +1474,8 @@ C DJG moved this to the last part of generate!!!
 	     else
 	     zhadron = recon%p%z*(cos(spec%p%theta)/tan(spec%p%theta-recon%p%yptar)+sin(spec%p%theta))
 	     endif
-	    call mc_calo2(spec%e%p, spec%e%theta, delta_e_arm, x_e_arm,
-     >		y_e_arm, z_e_arm, dx_e_arm, dy_e_arm, xfp, dxfp, yfp, dyfp,
+	    call mc_calo(spec%p%p, spec%p%theta, delta_p_arm, x_p_arm,
+     >		y_p_arm, z_p_arm, dx_p_arm, dy_p_arm, xfp, dxfp, yfp, dyfp,
      >		m2, mc_smear, mc_smear, doing_decay,
      >		ntup%resfac, frx, fry, ok_p_arm, pathlen, using_tgt_field,
      >          zhadron,hadron_arm,drift_to_cal2)
@@ -1485,8 +1485,8 @@ C DJG moved this to the last part of generate!!!
 	     else
 	     zhadron = recon%p%z*(cos(spec%p%theta)/tan(spec%p%theta-recon%p%yptar)+sin(spec%p%theta))
 	     endif
-	    call mc_calo2(spec%e%p, spec%e%theta, delta_e_arm, x_e_arm,
-     >		y_e_arm, z_e_arm, dx_e_arm, dy_e_arm, xfp, dxfp, yfp, dyfp,
+	    call mc_calo2(spec%p%p, spec%p%theta, delta_e_arm, x_e_arm,
+     >		y_p_arm, z_p_arm, dx_p_arm, dy_p_arm, xfp, dxfp, yfp, dyfp,
      >		m2, mc_smear, mc_smear, doing_decay,
      >		ntup%resfac, frx, fry, ok_p_arm, pathlen, using_tgt_field,
      >          zhadron,hadron_arm,drift_to_cal2)
