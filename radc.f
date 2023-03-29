@@ -280,7 +280,13 @@ cdg	endif
 	    Egamma_max(1) = min(Egamma1_max, gen%sumEgen%max - vertex%e%E)
 	    if (ntail.ne.0) Egamma_min(1) = gen%sumEgen%min - vertex%e%E
 
-! ... CASE 4: Pion production.  Too complicated to calculate min/max ebeam
+! ... CASE 4: D(e,e'n) - limit radiation so that E_beam > E' at the vertex.
+
+	  else if (doing_deuterium_n) then
+	    Egamma_max(1) = min(Egamma1_max, gen%sumEgen%max - vertex%e%E)
+	    if (ntail.ne.0) Egamma_min(1) = gen%sumEgen%min - vertex%e%E
+
+! ... CASE 5: Pion production.  Too complicated to calculate min/max ebeam
 ! ... from scattered particles.  Use sumEgen-vertex.e.E as limit for remaining
 ! ... generated energy available.
 
