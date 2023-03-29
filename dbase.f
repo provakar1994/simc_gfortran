@@ -3,7 +3,7 @@
 ! dbase_read reads the input file and sets the run-time flags for the run.
 ! Note that there are four INDEPENDENT ways to run SIMC.
 !
-! 1. doing_eep: (e,e'p) subcases:doing_hyd_elast, doing_deuterium, doing_heavy
+! 1. doing_eep: (e,e'p) subcases:doing_hyd_elast, doing_deuterium, doing_deuterium_n, doing_heavy
 !
 ! 2. doing_kaon:(e,e'K) subcases:doing_hydkaon, doing_deutkaon,doing_hekaon.
 !	which_kaon= 0/ 1/ 2 for Lambda/Sigam0/Sigma- quasifree.
@@ -202,6 +202,7 @@ C DJG:
 	  doing_eep = .true.
 	  doing_hyd_elast = (nint(targ%A).eq.1)
 	  doing_deuterium = (nint(targ%A).eq.2)
+	  doing_deuterium_n = (nint(targ%A).eq.2)
 	  doing_heavy = (nint(targ%A).ge.3)
 	endif
 
@@ -516,7 +517,7 @@ C DJG:
      >		spec%p%P, Mh2, Ebeam, spec%e%P)
 
 ! ... Read in the theory file (for A(e,e'p))
-	if (doing_deuterium .or. (doing_heavy.and.(.not.use_benhar_sf))) then
+	if (doing_deuterium .or. doing_deuterium_n .or. (doing_heavy.and.(.not.use_benhar_sf))) then
 	  call theory_init(success)
 	  if (.not.success) stop 'THEORY_INIT failed!'
 	endif
@@ -655,6 +656,8 @@ C DJG:
 	    write(6,*) ' ****--------  H(e,e''p)  --------****'
 	  else if (doing_deuterium) then
 	    write(6,*) ' ****--------  D(e,e''p)  --------****'
+	  else if (doing_deuterium_n) then
+	    write(6,*) ' ****--------  D(e,e''n)  --------****'
 	  else if (doing_heavy) then
 	    write(6,*) ' ****--------  A(e,e''p)  --------****'
 	  else

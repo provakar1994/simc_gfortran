@@ -328,7 +328,7 @@ cdg	call time (timestring1(11:23))
 	    endif
 
 ! ... update the "contribution" and "slop" limits
-	    call limits_update(main,vertex,orig,recon,doing_deuterium,
+	    call limits_update(main,vertex,orig,recon,doing_deuterium,doing_deuterium_n,
      >		doing_pion,doing_kaon,doing_delta,doing_rho,contrib,slop)
 
 	  endif ! <success>
@@ -382,7 +382,7 @@ c	call time (timestring2(11:23))
 !	genvol_inclusive = genvol	!may want dOmega, or dE*dOmega
 
 ! ... 2-fold to 5-fold.
-	if (doing_deuterium.or.doing_heavy.or.doing_pion.or.doing_kaon
+	if (doing_deuterium.or.doing_deuterium_n.or.doing_heavy.or.doing_pion.or.doing_kaon
      >      .or.doing_delta.or.doing_rho .or. doing_semi) then
 	  genvol = genvol * domega_p * (gen%e%E%max-gen%e%E%min)
 	endif
@@ -666,6 +666,8 @@ c	  write(7,*) 'BP thingie in/out     ',shmsSTOP_BP_in,shmsSTOP_BP_out
 	    write(iun,*) '              ****--------  H(e,e''p)  --------****'
 	  else if (doing_deuterium) then
 	    write(iun,*) '              ****--------  D(e,e''p)  --------****'
+	  else if (doing_deuterium_n) then
+	    write(iun,*) '              ****--------  D(e,e''n)  --------****'
 	  else if (doing_heavy) then
 	    write(iun,*) '              ****--------  A(e,e''p)  --------****'
 	  else
@@ -873,7 +875,8 @@ c	  write(7,*) 'BP thingie in/out     ',shmsSTOP_BP_in,shmsSTOP_BP_out
 	write(iun,'(5x,2(2x,a19,''='',i2))') 'which_pion', which_pion,
      >		'which_kaon', which_kaon
 	write(iun,'(5x,3(2x,a19,''='',l2))') 'doing_hyd_elast', doing_hyd_elast,
-     >		'doing_deuterium', doing_deuterium, 'doing_heavy', doing_heavy
+     >		'doing_deuterium', doing_deuterium,'doing_deuterium_n', 
+     >           doing_deuterium_n, 'doing_heavy', doing_heavy
 	write(iun,'(5x,3(2x,a19,''='',l2))') 'doing_hydpi', doing_hydpi,
      >          'doing_deutpi', doing_deutpi, 'doing_hepi', doing_hepi
 	write(iun,'(5x,3(2x,a19,''='',l2))') 'doing_hydkaon', doing_hydkaon,
@@ -1033,7 +1036,7 @@ c	  write(7,*) 'BP thingie in/out     ',shmsSTOP_BP_in,shmsSTOP_BP_out
      >      contrib%vertex%Em%lo, contrib%vertex%Em%hi, 'MeV'
 	write(iun,9917) 'Pm', VERTEXedge%Pm%min, VERTEXedge%Pm%max,
      >       contrib%vertex%Pm%lo, contrib%vertex%Pm%hi, 'MeV/c'
-	if ((doing_deuterium .or. doing_pion .or. doing_kaon .or. doing_delta) .and. using_rad) then
+	if ((doing_deuterium .or. doing_deuterium_n .or. doing_pion .or. doing_kaon .or. doing_delta) .and. using_rad) then
 	   write(iun,*) '      *** NOTE: sumEgen.min only used in GENERATE_RAD'
 	endif
 

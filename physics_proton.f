@@ -22,11 +22,12 @@
 
 !-------------------------------------------------------------------------
 
-	real*8 function deForest(ev)
+	real*8 function deForest(ev,nucleon_flag)
 
 	implicit none
 	include 'simulate.inc'
 
+	integer nucleon_flag ! 0=D(ee'p), 1=D(ee'n)
 	type(event):: ev
 
 	real*8	q4sq,ebar,qbsq,GE,GM,f1,kf2,qmu4mp,sigMott,sin_gamma,cos_phi
@@ -86,7 +87,11 @@
      >		'WARNING: deForest give cos_phi = ',cos_phi,' at event',nevent
 	endif
 
-	call fofa_best_fit(q4sq/hbarc**2,GE,GM)
+	if (nucleon_flag) then
+	   call fofa_best_fit(q4sq/hbarc**2,GE,GM)
+	else
+	   call fofa_best_fit_n(q4sq/hbarc**2,GE,GM)
+	end if
 	qmu4mp = q4sq/4./Mp2
 	f1 = (GE-GM*qmu4mp)/(1.0-qmu4mp)
 	kf2 = (GM-GE)/(1.0-qmu4mp)
@@ -134,6 +139,44 @@
 !-------------------------------------------------------------------------
 
 	subroutine fofa_best_fit(qsquar,GE,GM)
+
+*	csa 9/14/98 -- This calculates the form factors Gep and Gmp using
+*	Peter Bosted's fit to world data (Phys. Rev. C 51, 409, Eqs. 4
+*	and 5 or, alternatively, Eqs. 6)
+
+	implicit none
+	include 'simulate.inc'
+
+	real*8  qsquar,GE,GM,mu_p
+	real*8  Q,Q2,Q3,Q4,Q5,denom
+
+	mu_p = 2.793
+
+	Q2 = -qsquar*(hbarc**2.)*1.e-6
+	Q  = sqrt(max(Q2,0.e0))
+
+	Q3 = Q**3.
+	Q4 = Q**4.
+	Q5 = Q**5.
+
+* Use Eqs 4, 5:
+	denom = 1. + 0.62*Q + 0.68*Q2 + 2.8*Q3 + 0.83*Q4
+	GE = 1./denom
+	denom = 1. + 0.35*Q + 2.44*Q2 + 0.5*Q3 + 1.04*Q4 + 0.34*Q5
+	GM = mu_p/denom
+
+* OR Eqs 6:
+*	denom = 1. + 0.14*Q + 3.01*Q2 + 0.02*Q3 + 1.20*Q4 + 0.32*Q5
+*	GE = 1./denom
+*	GM = mu_p/denom
+
+	return
+	end
+
+
+!-------------------------------------------------------------------------
+
+	subroutine fofa_best_fit_n(qsquar,GE,GM)
 
 *	csa 9/14/98 -- This calculates the form factors Gep and Gmp using
 *	Peter Bosted's fit to world data (Phys. Rev. C 51, 409, Eqs. 4
