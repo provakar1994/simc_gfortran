@@ -87,10 +87,12 @@
      >		'WARNING: deForest give cos_phi = ',cos_phi,' at event',nevent
 	endif
 
-	if (nucleon_flag) then
+	if (nucleon_flag.eq.0) then
 	   call fofa_best_fit(q4sq/hbarc**2,GE,GM)
-	else
+	elseif (nucleon_flag.eq.1) then
 	   call fofa_best_fit_n(q4sq/hbarc**2,GE,GM)
+	else
+	   stop 'I don''t have ANY idea what D(e,e''N) we''re doing!!!'
 	end if
 	qmu4mp = q4sq/4./Mp2
 	f1 = (GE-GM*qmu4mp)/(1.0-qmu4mp)
