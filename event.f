@@ -1394,6 +1394,10 @@ CDJG Calculate the "Collins" (phi_pq+phi_targ) and "Sivers"(phi_pq-phi_targ) ang
 	  main%sigcc = deForest(vertex,0)		
 	  main%sigcc_recon = deForest(recon,0)
 
+	elseif (doing_deuterium_n) then
+	  main%sigcc = deForest(vertex,1)		
+	  main%sigcc_recon = deForest(recon,1)
+
 	elseif (doing_pion) then
 	  main%sigcc = peepi(vertex,main)
 C Use Clebsch-Gordon coefficients to approximate xsec for Delta final states
