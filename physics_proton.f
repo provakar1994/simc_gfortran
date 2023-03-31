@@ -180,35 +180,38 @@
 
 	subroutine fofa_best_fit_n(qsquar,GE,GM)
 
-*	csa 9/14/98 -- This calculates the form factors Gep and Gmp using
-*	Peter Bosted's fit to world data (Phys. Rev. C 51, 409, Eqs. 4
-*	and 5 or, alternatively, Eqs. 6)
+*	csa 12/08/2004 -- This calculates the form factors GEn and GMn using
+*	J. J. Kelly's fit to world data (Phys. Rev. C 70, 068202
 
 	implicit none
 	include 'simulate.inc'
 
-	real*8  qsquar,GE,GM,mu_p
-	real*8  Q,Q2,Q3,Q4,Q5,denom
+	real*8  qsquar,GE,GM,GD,Mproton
+	real*8  Q2,tau,tau2,tau3,GEdenom,GMdenom,GDdenom
 
-	mu_p = 2.793
+	Mproton = 0.938272081 ! +/- 6E-9 GeV
 
 	Q2 = -qsquar*(hbarc**2.)*1.e-6
-	Q  = sqrt(max(Q2,0.e0))
 
-	Q3 = Q**3.
-	Q4 = Q**4.
-	Q5 = Q**5.
+	GDdenom = (1. + Q2/0.71)*(1. + Q2/0.71)
+	GD = 1./GDdenom
+	
+	tau = Q2/(4.0*Mproton*Mproton)
+	tau2 = tau**2.
+	tau3 = tau**3.
 
-* Use Eqs 4, 5:
-	denom = 1. + 0.62*Q + 0.68*Q2 + 2.8*Q3 + 0.83*Q4
-	GE = 1./denom
-	denom = 1. + 0.35*Q + 2.44*Q2 + 0.5*Q3 + 1.04*Q4 + 0.34*Q5
-	GM = mu_p/denom
+	GEdenom = 1. + 5.222*tau + 0.04*tau2 + 11.438*tau3
+	GE = ((1.52*tau + 2.629*tau2 + 3.055*tau3)*GD)/GEdenom
+	GMdenom = 1. + 14.72*tau + 24.2*tau2 + 84.1*tau3
+	GM = (-1.913*(1. + 2.33*tau))/GMdenom
 
-* OR Eqs 6:
-*	denom = 1. + 0.14*Q + 3.01*Q2 + 0.02*Q3 + 1.20*Q4 + 0.32*Q5
-*	GE = 1./denom
-*	GM = mu_p/denom
+	!Debug
+!	write(6,*) 'Mp = ',Mproton
+!	write(6,*) 'Q2 = ',Q2
+!	write(6,*) 'GD = ',GD
+!	write(6,*) 'tau = ',tau
+!	write(6,*) 'GE = ',GE
+!	write(6,*) 'GM = ',GM
 
 	return
 	end

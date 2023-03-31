@@ -1,4 +1,4 @@
-	subroutine limits_update(main,vertex,orig,recon,doing_deuterium,
+	subroutine limits_update(main,vertex,orig,recon,doing_deuterium,doing_deuterium_n,
      >		doing_pion,doing_kaon,doing_delta,doing_rho,contrib,slop)
 
 	implicit none
@@ -10,7 +10,7 @@
 	type(contribtype):: contrib
 	type(sloptype):: slop
 	integer i
-	logical	doing_deuterium, doing_pion, doing_kaon, doing_delta, doing_rho
+	logical	doing_deuterium, doing_deuterium_n, doing_pion, doing_kaon, doing_delta, doing_rho
 
 ! Update the "contribution limits" records
 
@@ -24,7 +24,7 @@
 	call update_range(main%Trec, contrib%gen%Trec)
 
 ! ........ another tricky shift
-	if (doing_deuterium .or. doing_pion .or. doing_kaon .or. doing_delta .or. doing_rho) then
+	if (doing_deuterium .or. doing_deuterium_n .or. doing_pion .or. doing_kaon .or. doing_delta .or. doing_rho) then
 	  call update_range(vertex%e%E-main%Ein_shift,contrib%gen%sumEgen)
 	else
 	  call update_range(vertex%e%E+vertex%p%E-main%Ein_shift,contrib%gen%sumEgen)
@@ -205,6 +205,8 @@ C modified 5/15/06 for poinct
 ! doing_hyd_elast: Generate electron angles. Solve for everything else.
 ! doing_deuterium: Generate electron energy and angles, proton angles.
 !	Solve for proton momentum, p_fermi.
+! doing_deuterium_n: Generate electron energy and angles, neutron angles.
+!	Solve for proton momentum, p_fermi. ** Should n_fermi be different that p_fermi?
 ! doing_eep, A>2: generate electron and hadron energy, angles. Solve for Em,Pm.
 ! doing_pion: generate electron energy and angles, hadron angles, p_fermi, Em.
 !	Solve for hadron momentum.
@@ -220,7 +222,8 @@ C modified 5/15/06 for poinct
 !               E       yptar   xptar   E       yptar   xptar   p_fermi	Em
 !
 !H(e,e'p)		X	X
-!D(e,e'p)	X	X	X		X	X
+!D(e,e'p)	X	X	X		X	X       * <- Why isn't this marked?
+!D(e,e'n)	X	X	X		X	X       * <- Why isn't this marked?
 !A(e,e'p)	X	X	X	X	X	X
 !----------------------------------------------------------------------
 !H(e,e'pi)	X	X	X		X	X
@@ -259,7 +262,7 @@ C modified 5/15/06 for poinct
 	vertex%e%xptar=gen%e%xptar%min+grnd()*(gen%e%xptar%max-gen%e%xptar%min)
 
 ! Generate Hadron Angles (all but H(e,e'p)):
-	if (doing_deuterium.or.doing_heavy.or.doing_pion.or.doing_kaon
+	if (doing_deuterium.or.doing_deuterium_n.or.doing_heavy.or.doing_pion.or.doing_kaon
      >         .or.doing_delta.or.doing_semi) then
 	  vertex%p%yptar=gen%p%yptar%min+grnd()*
      >  	(gen%p%yptar%max-gen%p%yptar%min)
@@ -279,11 +282,11 @@ C modified 5/15/06 for poinct
 	endif
 
 ! Generate Electron Energy (all but hydrogen elastic)
-	if (doing_deuterium.or.doing_heavy.or.doing_pion.or.doing_kaon
+	if (doing_deuterium.or.doing_deuterium_n.or.doing_heavy.or.doing_pion.or.doing_kaon
      >       .or.doing_delta.or.doing_rho.or.doing_semi) then
 	  Emin=gen%e%E%min
 	  Emax=gen%e%E%max
-	  if (doing_deuterium .or. doing_pion .or. doing_kaon .or. doing_delta .or. doing_rho) then
+	  if (doing_deuterium .or. doing_deuterium_n .or. doing_pion .or. doing_kaon .or. doing_delta .or. doing_rho) then
 	    Emin = max(Emin,gen%sumEgen%min)
 	    Emax = min(Emax,gen%sumEgen%max)
 	  else if (doing_heavy) then		! A(e,e'p)
@@ -517,7 +520,7 @@ C DJG spectrometer
 	  vertex%p%delta = (vertex%p%P - spec%p%P)*100./spec%p%P
 	  if (debug(4)) write(6,*)'comp_ev: at 6'
 
-	elseif (doing_deuterium) then	!need Ep, and a jacobian.
+	elseif (doing_deuterium.or.doing_deuterium_n) then	!need Ep, and a jacobian.
 
 	  vertex%Em = targ%Mtar_struck + targ%Mrec - targ%M	!=2.2249 MeV
 	  vertex%Mrec = targ%M - targ%Mtar_struck + vertex%Em	!=targ.Mrec
@@ -878,7 +881,7 @@ CDJG Calculate the "Collins" (phi_pq+phi_targ) and "Sivers"(phi_pq-phi_targ) ang
 
 	if (doing_hyd_elast) then
 	  vertex%Trec = 0.0
-	else if (doing_deuterium) then
+	else if (doing_deuterium.or.doing_deuterium_n) then
 	  vertex%Pm = vertex%Pmiss
 	  vertex%Trec = sqrt(vertex%Mrec**2 + vertex%Pm**2) - vertex%Mrec
 	else if (doing_heavy) then
@@ -1285,7 +1288,7 @@ CDJG Calculate the "Collins" (phi_pq+phi_targ) and "Sivers"(phi_pq-phi_targ) ang
 	if (doing_hyd_elast) then
 	  recon%Trec = 0.0
 	  recon%Em = recon%nu + targ%M - recon%p%E - recon%Trec
-	else if (doing_deuterium .or. doing_heavy) then
+	else if (doing_deuterium .or. doing_deuterium_n .or. doing_heavy) then
 	  recon%Trec = sqrt(recon%Pm**2+targ%Mrec**2) - targ%Mrec
 	  recon%Em = recon%nu + targ%Mtar_struck - recon%p%E - recon%Trec
 	else if (doing_pion .or. doing_kaon .or. doing_delta .or. doing_rho) then
@@ -1338,7 +1341,7 @@ CDJG Calculate the "Collins" (phi_pq+phi_targ) and "Sivers"(phi_pq-phi_targ) ang
 	else if (use_benhar_sf.and.doing_heavy) then ! Doing Spectral Functions
 	   call sf_lookup_diff(vertex%Em, vertex%Pm, weight)
 	   main%SF_weight = targ%Z*transparency*weight
- 	else if (doing_deuterium .or. (doing_heavy.and.(.not.use_benhar_sf))) then
+ 	else if (doing_deuterium .or. doing_deuterium_n .or. (doing_heavy.and.(.not.use_benhar_sf))) then
 	  main%SF_weight = 0.0
 	  do i=1,nrhoPm
 	    weight = 0.0
@@ -1391,8 +1394,8 @@ CDJG Calculate the "Collins" (phi_pq+phi_targ) and "Sivers"(phi_pq-phi_targ) ang
 	  main%sigcc_recon = sigep(recon)
 
 	elseif (doing_deuterium.or.doing_heavy) then
-	  main%sigcc = deForest(vertex,0)		
-	  main%sigcc_recon = deForest(recon,0)
+	  main%sigcc = deForest(vertex,1)		
+	  main%sigcc_recon = deForest(recon,1)
 
 	elseif (doing_deuterium_n) then
 	  main%sigcc = deForest(vertex,1)		
