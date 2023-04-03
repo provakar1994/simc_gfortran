@@ -881,10 +881,7 @@ c	open(unit=1,file=theory_file,status='old',readonly,shared,iostat=iok)
 	enddo
 
 ! ... are we doing deuterium? (i.e. only using a 1D spectral function)
-	doing_deuterium = nrhoPm.eq.1 .and. E_Fermi.lt.1.0
-
-! ... are we doing deuterium? (i.e. only using a 1D spectral function)
-	doing_deuterium_n = nrhoPm.eq.1 .and. E_Fermi.lt.1.0
+	if (.not.doing_deuterium_n) doing_deuterium = nrhoPm.eq.1 .and. E_Fermi.lt.1.0
 
 ! ... renormalize the momentum distributions
 	do m=1, nrhoPm

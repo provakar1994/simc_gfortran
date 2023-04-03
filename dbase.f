@@ -197,12 +197,16 @@ C DJG:
 	   doing_herho = (nint(targ%A).eq.3)
 	   doing_eep=.false.
 
+	else if (doing_deuterium_n) then
+	  Mh=Mn
+	  doing_eep = .true.
+
 	else		!doing_eep if nothing else set.
 	  Mh=Mp
 	  doing_eep = .true.
 	  doing_hyd_elast = (nint(targ%A).eq.1)
 	  doing_deuterium = (nint(targ%A).eq.2)
-	  doing_deuterium_n = (nint(targ%A).eq.2)
+	  !doing_deuterium_n = (nint(targ%A).eq.2)
 	  doing_heavy = (nint(targ%A).ge.3)
 	endif
 
@@ -279,6 +283,9 @@ C DJG:
 	  targ%Mtar_struck = Mp
 	  targ%Mrec_struck = 0.0
 	  sign_hadron=1.0
+	  if (doing_deuterium_n) then
+	     targ%Mtar_struck = Mn
+	  endif
 	else if (doing_delta) then		!Strike (and detect) proton, pion 'recoil'
 	  targ%Mtar_struck = Mp
 	  targ%Mrec_struck = Mpi
@@ -892,6 +899,7 @@ c	      stop
 	ierr = regparmdouble('Ebeam',Ebeam,0)
 	ierr = regparmdouble('dEbeam',dEbeam,0)
 	ierr = regparmdouble('EXPER%charge',EXPER%charge,0)
+	ierr = regparmint('doing_deuterium_n',doing_deuterium_n,0)
 	ierr = regparmint('doing_kaon',doing_kaon,0)
 	ierr = regparmint('which_kaon',which_kaon,0)
 	ierr = regparmint('doing_pion',doing_pion,0)
