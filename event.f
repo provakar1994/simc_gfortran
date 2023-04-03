@@ -1394,8 +1394,8 @@ CDJG Calculate the "Collins" (phi_pq+phi_targ) and "Sivers"(phi_pq-phi_targ) ang
 	  main%sigcc_recon = sigep(recon)
 
 	elseif (doing_deuterium.or.doing_heavy) then
-	  main%sigcc = deForest(vertex,1)		
-	  main%sigcc_recon = deForest(recon,1)
+	  main%sigcc = deForest(vertex,0)		
+	  main%sigcc_recon = deForest(recon,0)
 
 	elseif (doing_deuterium_n) then
 	  main%sigcc = deForest(vertex,1)		
