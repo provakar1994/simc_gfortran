@@ -206,12 +206,12 @@
 	GM = (-1.913*(1. + 2.33*tau))/GMdenom
 
 	!Debug
-	write(6,*) 'Mp = ',Mproton
-	write(6,*) 'Q2 = ',Q2
-	write(6,*) 'GD = ',GD
-	write(6,*) 'tau = ',tau
-	write(6,*) 'GE = ',GE
-	write(6,*) 'GM = ',GM
+c$$$	write(6,*) 'Mp = ',Mproton
+c$$$	write(6,*) 'Q2 = ',Q2
+c$$$	write(6,*) 'GD = ',GD
+c$$$	write(6,*) 'tau = ',tau
+c$$$	write(6,*) 'GE = ',GE
+c$$$	write(6,*) 'GM = ',GM
 
 	return
 	end
