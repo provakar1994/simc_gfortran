@@ -197,7 +197,7 @@ C DJG:
 	   doing_herho = (nint(targ%A).eq.3)
 	   doing_eep=.false.
 
-	else if (doing_deuterium_n) then
+	else if (doing_deuterium_n) then ! D(ee'n)
 	  Mh=Mn
 	  doing_eep = .true.
 
@@ -206,7 +206,6 @@ C DJG:
 	  doing_eep = .true.
 	  doing_hyd_elast = (nint(targ%A).eq.1)
 	  doing_deuterium = (nint(targ%A).eq.2)
-	  !doing_deuterium_n = (nint(targ%A).eq.2)
 	  doing_heavy = (nint(targ%A).ge.3)
 	endif
 

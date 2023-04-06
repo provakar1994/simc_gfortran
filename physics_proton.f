@@ -1,4 +1,4 @@
-	real*8 function sigep(vertex)
+	real*8 function sigep(vertex,model_flag)
 
 ! elastic cross section, units are set by sigMott.f (microbarn/sr)
 
@@ -7,9 +7,17 @@
 
 	real*8	q4sq,qmu4mp,W1p,W2p,Wp,GE,GM,sigMott
 	type(event):: vertex
+	integer model_flag
+! Valid choices for model_flag:
+!       Flag = 0  -- Calculate GEp & GMp using Peter Bosted's fit (1998)
+!       Flag = 1  -- Calculate GEp & GMp using J. J. Kelly's fit (2004), doing_hyd_elastic
 
 	q4sq	= vertex%Q2
-	call fofa_best_fit(-q4sq/hbarc**2,GE,GM)
+	if (model_flag.eq.0) then
+	   call fofa_best_fit(-q4sq/hbarc**2,GE,GM)
+	elseif (model_flag.eq.1) then
+	   call fofa_best_fit_p(-q4sq/hbarc**2,GE,GM)
+	endif
 	qmu4mp	= q4sq/4./Mp2
 	W1p = GM**2*qmu4mp
 	W2p = (GE**2+GM**2*qmu4mp)/(1.0+qmu4mp)
@@ -22,13 +30,17 @@
 
 !-------------------------------------------------------------------------
 
-	real*8 function deForest(ev,nucleon_flag)
+	real*8 function deForest(ev,model_flag)
 
 	implicit none
 	include 'simulate.inc'
 
-	integer nucleon_flag ! 0=D(ee'p), 1=D(ee'n)
 	type(event):: ev
+	integer model_flag 
+! Valid choices for model_flag:
+!       Flag = 0  -- Calculate GEp & GMp using Peter Bosted's fit (1998)
+!       Flag = 1  -- Calculate GEp & GMp using J. J. Kelly's fit (2004), doing_deuterium
+!       Flag = 2  -- Calculate GEn & GMn using J. J. Kelly's fit (2004), doing_deuterium_n
 
 	real*8	q4sq,ebar,qbsq,GE,GM,f1,kf2,qmu4mp,sigMott,sin_gamma,cos_phi
 	real*8	pbarp,pbarq,pq,qbarq,q2,f1sq,kf2_over_2m_allsq
@@ -87,9 +99,11 @@
      >		'WARNING: deForest give cos_phi = ',cos_phi,' at event',nevent
 	endif
 
-	if (nucleon_flag.eq.0) then
+	if (model_flag.eq.0) then
 	   call fofa_best_fit(q4sq/hbarc**2,GE,GM)
-	elseif (nucleon_flag.eq.1) then
+	elseif (model_flag.eq.1) then
+	   call fofa_best_fit_p(q4sq/hbarc**2,GE,GM)
+	elseif (model_flag.eq.2) then
 	   call fofa_best_fit_n(q4sq/hbarc**2,GE,GM)
 	else
 	   stop 'I don''t have ANY idea what D(e,e''N) we''re doing!!!'
@@ -175,13 +189,52 @@
 	return
 	end
 
+!-------------------------------------------------------------------------
+
+	subroutine fofa_best_fit_p(qsquar,GE,GM)
+
+*	csa 12/08/2004 -- This calculates the form factors GEp and GMp using
+*	J. J. Kelly's fit to world data (Phys. Rev. C 70, 068202)
+
+	implicit none
+	include 'simulate.inc'
+
+	real*8  qsquar,GE,GM,GD,Mproton
+	real*8  Q2,tau,tau2,tau3,GEdenom,GMdenom,GDdenom
+
+	Mproton = 0.938272081 ! +/- 6E-9 GeV
+
+	Q2 = -qsquar*(hbarc**2.)*1.e-6
+
+	GDdenom = (1. + Q2/0.71)*(1. + Q2/0.71)
+	GD = 1./GDdenom
+	
+	tau = Q2/(4.0*Mproton*Mproton)
+	tau2 = tau**2.
+	tau3 = tau**3.
+
+	GEdenom = 1. + 10.98*tau + 12.82*tau2 + 21.97*tau3
+	GE = (1. - 0.24*tau)/GEdenom
+	GMdenom = 1. + 10.97*tau + 18.86*tau2 + 6.55*tau3
+	GM = (2.79*(1. + 0.12*tau))/GMdenom
+
+	!Debug
+c$$$	write(6,*) 'Mp = ',Mproton
+c$$$	write(6,*) 'Q2 = ',Q2
+c$$$	write(6,*) 'GD = ',GD
+c$$$	write(6,*) 'tau = ',tau
+c$$$	write(6,*) 'GE = ',GE
+c$$$	write(6,*) 'GM = ',GM
+
+	return
+	end
 
 !-------------------------------------------------------------------------
 
 	subroutine fofa_best_fit_n(qsquar,GE,GM)
 
 *	csa 12/08/2004 -- This calculates the form factors GEn and GMn using
-*	J. J. Kelly's fit to world data (Phys. Rev. C 70, 068202
+*	J. J. Kelly's fit to world data (Phys. Rev. C 70, 068202)
 
 	implicit none
 	include 'simulate.inc'
