@@ -122,6 +122,9 @@
 	type(event_main):: main
 	type(event):: vertex, orig
 
+	real*8 vxi,vyi,vzi
+	common /reconz/ vxi,vyi,vzi
+
 	real*8 nsig_max
 	parameter(nsig_max=3.0e0)      !max #/sigma for gaussian ran #s.
 
@@ -167,6 +170,11 @@ C DJG Note that this means that +fry points down. I will make frx point left.
 	main%target%z = (0.5-grnd())*targ%length+targ%zoffset
 	main%target%rastery = t6	!'raster' contribution to vert. pos.
 	main%target%rasterx = t5	! points right as you look downstream  - need to flip sign later.
+
+	! true vertex co-ordinates
+	vxi = -main%target%x
+	vyi = -main%target%y
+	vzi = main%target%z
 
 ! Take fluctuations of the beam energy into account, and remember to correct
 ! for ionization loss in the target and Coulomb acceleration of incoming
