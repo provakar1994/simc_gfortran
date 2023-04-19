@@ -10,6 +10,9 @@
 	type(event_main):: main
 	type(event):: vertex, orig, recon
 
+	real*8 vxi,vyi,vzi
+	common /reconz/ vxi,vyi,vzi
+
 !local (e,e'p) calculations:
 	real*8 poftheta		!p as calculated from theta, assuming elastic.
 	real*8 corrsing		!'corrected singles' for elastic
@@ -237,6 +240,9 @@ c	  ntu(11) = vertex%p%xptar			!mr
 	  ntu(54) = recon%e%phi
 	  ntu(55) = recon%p%theta
 	  ntu(56) = recon%p%phi
+	  ntu(57) = vxi
+	  ntu(58) = vyi
+	  ntu(59) = vzi
 	endif
 
 c	call HFN(NtupleID,ntu)
