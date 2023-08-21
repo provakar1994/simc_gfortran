@@ -25,8 +25,8 @@ ifeq ($(MYOS),Linux)
 endif
 
 CXX=g++
-CXXFLAGS0 = -O3 -std=c++11
-CXXFLAGS=$(CXXFLAGS0) $(DROOT)
+#CXXFLAGS0 = -O3 -std=c++11
+#CXXFLAGS=$(CXXFLAGS0) $(DROOT)
 ROOTDIR=$(ROOTSYS)
 DMYROOT= -DMYROOT
 ROOTLIBS     := $(shell $(ROOTDIR)/bin/root-config --prefix=$(ROOTDIR)  --libs)
