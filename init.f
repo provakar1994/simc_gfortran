@@ -839,7 +839,7 @@ c	exponentiate = use_expon
 
 ! ... open the file
 	if ( nint(targ%A) .eq. 2) then
-	  theory_file='h2.theory'
+	  theory_file='h2.new_theory'
 	else if ( nint(targ%A) .eq. 12) then
 	  theory_file='c12.theory'
 	else if ( nint(targ%A) .eq. 56) then
