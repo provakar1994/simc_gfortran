@@ -288,6 +288,14 @@ c	endif
 	  NtupleTag(m) = 'vzi'	! 59
 	  m = m+1
 	  NtupleTag(m) = 'ebeam'! 60
+	  m = m+1
+	  NtupleTag(m) = 'veE'! 61
+	  m = m+1
+	  NtupleTag(m) = 'vetheta'! 62
+	  m = m+1
+	  NtupleTag(m) = 'vQ2'! 63
+	  m = m+1
+	  NtupleTag(m) = 'vnu'! 64
 	endif
 
 !	else		!used to be the if (doing_phsp) option.

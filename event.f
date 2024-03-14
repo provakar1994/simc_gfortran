@@ -233,8 +233,8 @@ C modified 5/15/06 for poinct
 !               E       yptar   xptar   E       yptar   xptar   p_fermi	Em
 !
 !H(e,e'p)		X	X
-!D(e,e'p)	X	X	X		X	X       * <- Why isn't this marked?
-!D(e,e'n)	X	X	X		X	X       * <- Why isn't this marked?
+!D(e,e'p)	X	X	X		X	X       
+!D(e,e'n)	X	X	X		X	X       
 !A(e,e'p)	X	X	X	X	X	X
 !----------------------------------------------------------------------
 !H(e,e'pi)	X	X	X		X	X

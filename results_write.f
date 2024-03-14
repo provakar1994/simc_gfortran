@@ -244,6 +244,10 @@ c	  ntu(11) = vertex%p%xptar			!mr
 	  ntu(58) = vyi
 	  ntu(59) = vzi
 	  ntu(60) = vEin
+	  ntu(61) = vertex%e%E
+	  ntu(62) = vertex%e%theta
+	  ntu(63) = vertex%Q2/1.e6
+	  ntu(64) = vertex%nu/1.e3
 	endif
 
 c	call HFN(NtupleID,ntu)
