@@ -43,7 +43,7 @@
 	real*8	Mh, Mh2, Mh2_final	!mh,mh2 are INITIAL hadron mass(**2)
 	real*8	Ebeam, dEbeam, Ebeam_vertex_ave, genvol, genvol_inclusive
 	real*8	luminosity, targetfac, normfac
-	real*8	wtcontribute, dE_edge_test, Egamma_gen_max
+	real*8	wtcontribute, dE_edge_test, Egamma_gen_max, max_weight_RS
 	real*8  pt_b_param,sigc_kin_min,sigc_kin_max,sigc_kin_ind
 	real*8  targ_Bangle, targ_Bphi, targ_pol, drift_to_cal, drift_to_cal2,sign_hadron
 	integer*4 sigc_flag,sigc_nbin
@@ -59,10 +59,12 @@
 	logical mc_smear
 	logical debug(6)
 	integer*4 nevent, ntried, ngen, deForest_flag, Nntu
+	integer*4 wt_gt_maxwt_RS
+	real*8 obs_maxwt_RS
 	integer*4 ncontribute, npasscuts, ncontribute_no_rad_proton, spect_mode, phsp_mode
-	character base*40
-	character extra_dbase_file*60
-	character tgt_field_file*60
+	character base*100
+	character extra_dbase_file*120
+	character tgt_field_file*120
 	logical using_E_arm_montecarlo, using_P_arm_montecarlo
 	logical doing_phsp, using_rad, hard_cuts
 	logical doing_hyd_elast, doing_deuterium, doing_deuterium_n, doing_heavy
@@ -75,14 +77,17 @@
 	integer*4 electron_arm, hadron_arm, use_first_cer
 	real*8 transparency
 	logical use_benhar_sf
-	character*80 random_state_file
+	logical using_RS
+	integer*4 using_RS_int
+	character*120 random_state_file
 	character*132 start_random_state_file
 	integer*4 random_seed
 
 
 	common /gnrl/   Mh, Mh2, Mh2_final, Ebeam, dEbeam, Ebeam_vertex_ave,
      >    genvol, genvol_inclusive, luminosity, targetfac,
-     >    normfac, wtcontribute, dE_edge_test, Egamma_gen_max,pt_b_param,
+     >    normfac, wtcontribute, dE_edge_test, Egamma_gen_max, pt_b_param,
+     >    max_weight_RS, obs_maxwt_RS, wt_gt_maxwt_RS, using_RS_int, 
      >    sigc_kin_min,sigc_kin_max,sigc_kin_ind,targ_Bangle, targ_Bphi, targ_pol, 
      >    drift_to_cal,drift_to_cal2,sign_hadron,sigc_flag,sigc_nbin,
      >    gen, spec, cuts, edge, VERTEXedge, SPedge,
@@ -95,7 +100,7 @@
      >    doing_heavy, doing_semipi, doing_semika, doing_hplus, which_kaon,
      >    which_pion, using_cit_generation, using_Coulomb, using_Eloss,
      >    correct_Eloss, correct_raster, do_fermi,using_tgt_field,
-     >    electron_arm, hadron_arm, use_first_cer,
+     >    electron_arm, hadron_arm, use_first_cer, using_RS,
      >    transparency, use_benhar_sf,start_random_state_file,
      >    random_state_file, random_seed
 

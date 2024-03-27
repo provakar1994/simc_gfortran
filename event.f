@@ -1323,7 +1323,8 @@ CDJG Calculate the "Collins" (phi_pq+phi_targ) and "Sivers"(phi_pq-phi_targ) ang
 	integer		i, iPm1
 	real*8		a, b, r, frac, peepi, peeK, peedelta, peerho, peepiX
 	real*8		survivalprob, semi_dilution
-	real*8		weight, width, sigep, deForest, tgtweight
+	real*8		weight, width, sigep, deForest, tgtweight, wtfrac_RS
+	real*8          grnd	!random # generator.
 	logical		force_sigcc, success
 	type(event_main):: main
 	type(event)::	vertex, vertex0, recon
@@ -1508,7 +1509,34 @@ C If using Coulomb corrections, include focusing factor
 	if (debug(5))write(6,*) 'gen_weight = ',main%gen_weight,
      >		main%jacobian,main%sigcc
 
-	success = .true.
+
+! Implementing Rejection Sampling (RS):
+! ----
+! User must provide a maximum weight (max_weight_RS), which they
+! can determine by generating some number of events (~100K-1M) in the desired
+! generation limit. RS then throws flat in the chosen phase space
+! and keeps or rejects each event by probability weight/max_weight_RS.
+! The motivation is to write out only the events with significant weight.
+! ----
+! NOTE: Normalization with RS is tricky. main%weight should be replaced
+! with the max_weight_RS for this purpose. max_weight_RS value can be
+! read from "hist" file for post analysis. 	
+
+	if (using_RS) then
+	   wtfrac_RS = main%weight/max_weight_RS
+	   if (wtfrac_RS.gt.1.) then
+	      write(6,*) 'WARNING: main%weight > max_weight_RS, Ratio = ',wtfrac_RS
+	      wt_gt_maxwt_RS = wt_gt_maxwt_RS + 1
+	      if (main%weight.gt.obs_maxwt_RS) obs_maxwt_RS = main%weight
+	   endif
+	   if (wtfrac_RS.ge.grnd()) then
+	      success = .true.
+	   else
+	      success = .false.
+	   endif
+	else
+	   success = .true.
+	endif
 
 	if (debug(2)) write(6,*)'comp_main: ending, success =',success
 	return

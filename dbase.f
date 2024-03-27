@@ -972,6 +972,8 @@ c	      stop
 *	SIMULATE
 
 	ierr = regparmint('ngen',ngen,0)
+	ierr = regparmint('using_RS',using_RS,0)
+	ierr = regparmdouble('max_weight_RS',max_weight_RS,0)
 	ierr = regparmint('hard_cuts',hard_cuts,0)
 	ierr = regparmint('using_rad',using_rad,0)
 	ierr = regparmint('spect_mode',spect_mode,0)

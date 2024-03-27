@@ -26,8 +26,8 @@
 	real*8		domega_e, domega_p !populated e/hadron solid angles.
 	logical		success
 	logical		pass_cuts
-	character	filename*80, genfile*80, histfile*80, timestring1*30
-	character	timestring2*30,genifile*80
+	character	filename*120, genfile*120, histfile*120, timestring1*30
+	character	timestring2*30,genifile*120
 	type(event)::		vertex, vertex0, orig, recon
 	type(event_main)::	main
 	type(contribtype)::	contrib
@@ -876,7 +876,9 @@ c	  write(7,*) 'BP thingie in/out     ',shmsSTOP_BP_in,shmsSTOP_BP_out
      >		'which_kaon', which_kaon
 	write(iun,'(5x,3(2x,a19,''='',l2))') 'doing_hyd_elast', doing_hyd_elast,
      >		'doing_deuterium', doing_deuterium,'doing_deuterium_n', 
-     >           doing_deuterium_n, 'doing_heavy', doing_heavy
+     >           doing_deuterium_n
+	write(iun,'(5x,3(2x,a19,''='',l2))') 'doing_heavy', doing_heavy,
+     >		'using_RS', using_RS
 	write(iun,'(5x,3(2x,a19,''='',l2))') 'doing_hydpi', doing_hydpi,
      >          'doing_deutpi', doing_deutpi, 'doing_hepi', doing_hepi
 	write(iun,'(5x,3(2x,a19,''='',l2))') 'doing_hydkaon', doing_hydkaon,
@@ -901,6 +903,7 @@ c	  write(7,*) 'BP thingie in/out     ',shmsSTOP_BP_in,shmsSTOP_BP_out
 	write(iun,'(7x,a11,''='',f10.3,a4)') 'ctau',ctau,'cm'
 	if (use_benhar_sf)
      >      write(iun,'(7x,a12,''='',f8.4)') 'transparency',transparency
+
 ! Counters
 	write(iun,*) 'COUNTERS:'
 	write(iun,'(12x,''Ngen (request) = '',i10)') ngen
@@ -964,6 +967,22 @@ c	  write(7,*) 'BP thingie in/out     ',shmsSTOP_BP_in,shmsSTOP_BP_out
 	if(random_seed.ne.0) write(iun,'(15x,''Random Seed = '',i10)') random_seed
 	if(random_state_file.ne.' ') write(iun,'( '' Random State Save File:  '',a)')
      >         random_state_file(1:index(random_state_file,' ')-1)
+
+! Rejection Sampling (RS)
+	write(iun,*) 'REJECTION SAMPLING (RS) SUMMARY:'
+	if (using_RS) then 
+	   using_RS_int = 1
+	else 
+	   using_RS_int = 0
+	endif
+	write(iun,'(12x,''Using RS                       = '',i5)') using_RS_int
+	write(iun,'(12x,''Chosen max wt (max_weight_RS)  = '',e16.6,1x,a11)') max_weight_RS,'ub/MeV/sr^2'
+	if (using_RS) then
+	   write(iun,'(12x,''No. events with wt>max_wt_RS   = '',i5)') wt_gt_maxwt_RS   
+	   if (wt_gt_maxwt_RS.gt.0) then
+	      write(iun,'(12x,''Observed max wt                = '',e16.6,1x,a11)') obs_maxwt_RS,'ub/MeV/sr^2'
+	   endif
+	endif
 
 ! Resolution summary
 
