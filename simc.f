@@ -906,11 +906,11 @@ c	  write(7,*) 'BP thingie in/out     ',shmsSTOP_BP_in,shmsSTOP_BP_out
 
 ! Counters
 	write(iun,*) 'COUNTERS:'
-	write(iun,'(12x,''Ngen (request) = '',i10)') ngen
-	write(iun,'(12x,''Ntried         = '',i10)') ntried
-	write(iun,'(12x,''Ncontribute    = '',i10)') ncontribute
-	write(iun,'(12x,''Nco_no_rad_prot= '',i10)') ncontribute_no_rad_proton
-	write(iun,'(12x,''-> %no_rad_prot= '',f10.3)')
+	write(iun,'(12x,''Ngen (request) = '',i15)') ngen
+	write(iun,'(12x,''Ntried         = '',i15)') ntried
+	write(iun,'(12x,''Ncontribute    = '',i15)') ncontribute
+	write(iun,'(12x,''Nco_no_rad_prot= '',i15)') ncontribute_no_rad_proton
+	write(iun,'(12x,''-> %no_rad_prot= '',f15.3)')
      >		(100.*ncontribute_no_rad_proton/max(dble(ncontribute),0.1e0))
 	write(iun,'(/1x,''INTEGRATED WEIGHTS (number of counts in delta/Em cuts!):'')')
 	write(iun,'(1x,''              MeV: wtcontr= '',e16.8)') wtcontribute/nevent
