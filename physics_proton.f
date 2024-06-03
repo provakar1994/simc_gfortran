@@ -1,7 +1,7 @@
 	real*8 function sigep(vertex,model_flag)
 
 ! elastic cross section, units are set by sigMott.f (microbarn/sr)
-
+	USE structureModule
 	implicit none
 	include 'simulate.inc'
 
@@ -32,6 +32,7 @@
 
 	real*8 function deForest(ev,model_flag)
 
+	USE structureModule
 	implicit none
 	include 'simulate.inc'
 
@@ -40,7 +41,7 @@
 ! Valid choices for model_flag:
 !       Flag = 0  -- Calculate GEp & GMp using Peter Bosted's fit (1998)
 !       Flag = 1  -- Calculate GEp & GMp using J. J. Kelly's fit (2004), doing_deuterium
-!       Flag = 2  -- Calculate GEn & GMn using J. J. Kelly's fit (2004), doing_deuterium_n
+!       Flag = 2  -- Calculate GEn & GMn using Riordan fit (2010) and J. J. Kelly's fit (2004), respectively, doing_deuterium_n
 
 	real*8	q4sq,ebar,qbsq,GE,GM,f1,kf2,qmu4mp,sigMott,sin_gamma,cos_phi
 	real*8	pbarp,pbarq,pq,qbarq,q2,f1sq,kf2_over_2m_allsq
@@ -160,6 +161,7 @@
 *	Peter Bosted's fit to world data (Phys. Rev. C 51, 409, Eqs. 4
 *	and 5 or, alternatively, Eqs. 6)
 
+	USE structureModule
 	implicit none
 	include 'simulate.inc'
 
@@ -196,6 +198,7 @@
 *	csa 12/08/2004 -- This calculates the form factors GEp and GMp using
 *	J. J. Kelly's fit to world data (Phys. Rev. C 70, 068202)
 
+	USE structureModule
 	implicit none
 	include 'simulate.inc'
 
@@ -233,9 +236,11 @@ c$$$	write(6,*) 'GM = ',GM
 
 	subroutine fofa_best_fit_n(qsquar,GE,GM)
 
-*	csa 12/08/2004 -- This calculates the form factors GEn and GMn using
-*	J. J. Kelly's fit to world data (Phys. Rev. C 70, 068202)
+*	csa 12/08/2004 -- This calculates the form factors GMn using
+*	J. J. Kelly's fit to world data (Phys. Rev. C 70, 068202). For GEn,
+*       S. Riordan fit has been used (Phys. Rev. Lett. 105, 262302).
 
+	USE structureModule
 	implicit none
 	include 'simulate.inc'
 

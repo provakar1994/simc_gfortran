@@ -27,18 +27,19 @@ D       = $(simcdir)/fdss/
 OBJ1	= target.o brem.o gauss1.o NtupleInit.o NtupleClose.o enerloss_new.o
 OBJ2	= radc.o init.o dbase.o physics_kaon.o physics_pion.o physics_delta.o physics_proton.o loren.o sf_lookup.o
 OBJ3    = semi_physics.o rho_physics.o rho_decay.o generate_rho.o trg_track.o semi_dilution.o
-OBJ4	= results_write.o event.o call_ranlux.o jacobians.o F1F2IN21.o
+OBJ4	= results_write.o event.o call_ranlux.o jacobians.o F1F2IN21_v1.0.o
 OBJ5	= $(A)musc.o $(A)musc_ext.o $(A)project.o $(A)transp.o
 OBJ6	= $(A)rotate_haxis.o $(A)rotate_vaxis.o $(A)locforunt.o
-OBJ7	= $(H)mc_hms.o $(H)mc_hms_hut.o $(H)mc_hms_recon.o
+OBJ7	= $(H)mc_hms.o $(H)mc_hms_hut.o $(H)mc_hms_recon.o $(H)pion_coll_absorb.o $(H)mc_hms_coll.o
 OBJ8	= $(S)mc_sos.o $(S)mc_sos_hut.o $(S)mc_sos_recon.o
 OBJ9	= $(R)mc_hrsr.o $(R)mc_hrsr_hut.o $(R)mc_hrsr_recon.o
 OBJA	= $(L)mc_hrsl.o $(L)mc_hrsl_hut.o $(L)mc_hrsl_recon.o
-OBJB	= $(SH)mc_shms.o $(SH)mc_shms_hut.o $(SH)mc_shms_recon.o
+OBJB	= $(SH)mc_shms.o $(SH)mc_shms_hut.o $(SH)mc_shms_recon.o $(SH)mc_shms_coll.o
 OBJC    = $(T)Ctq5Pdf.o
 OBJD    = $(C)mc_calo.o $(C)mc_calo2.o $(C)mc_calo_recon.o
 OBJCH   = $(CH)lfit.o $(CH)ranlux.o $(CH)fint.o $(CH)kerset.o $(CH)abend.o
 OBJF   = $(D)fdss.o
+MODULES	= modules.f histograms_module.f
  
 my_objs	=  $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) $(OBJ5) $(OBJ6) $(OBJ7) $(OBJ8) $(OBJ9) $(OBJA) $(OBJB) $(OBJC) $(OBJD) $(OBJCH) $(OBJF)
 
@@ -121,11 +122,14 @@ DEPEND_RULE = ( cat $< |  sed -n -e \
 %.d: %.f
 	$(DEPEND_RULE)
 
-none: simc $(my_deps)
+none: mods simc $(my_deps)
 
-all: simc  $(my_deps)
+all: mods simc  $(my_deps)
 
 include $(my_deps)
+
+mods: 
+	$(F77) -c -ffixed-line-length-132 $(MODULES)
 
 simc: simc.o $(my_objs) Makefile CTP/O.Linux/Linux/lib/libctp.a
 	$(F77) $(OSF_SHARED) -o $@ $(FFLAGS) $(my_objs) simc.o $(OTHERLIBS)
@@ -164,7 +168,7 @@ CTP/O.Linux/Linux/lib/libctp.a:
 
 
 clean:
-	$(RM) *.[od] $(H)*.[od] $(S)*.[od] $(L)*.[od] $(R)*.[od] $(SH)*.[od] $(A)*.[od] $(T)*.[od] $(C)*.[od] $(CH)*.[od] simc
+	$(RM) *.[od] $(H)*.[od] $(S)*.[od] $(L)*.[od] $(R)*.[od] $(SH)*.[od] $(A)*.[od] $(T)*.[od] $(C)*.[od] $(CH)*.[od] *.mod simc
 
 real_clean:
 	$(RM) *.[od] $(H)*.[od] $(S)*.[od] $(L)*.[od] $(R)*.[od] $(SH)*.[od] $(A)*.[od] $(T)*.[od] $(C)*.[od] simc
