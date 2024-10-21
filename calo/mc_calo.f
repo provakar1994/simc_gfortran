@@ -36,10 +36,10 @@ C-______________________________________________________________________________
 
 
 ! No collimator, but use collimator dimensions to define calo
-	parameter (h_entr = 20.0)
-	parameter (v_entr = 50.0)
-	parameter (h_exit = 20.0)
-	parameter (v_exit = 50.0)
+	parameter (h_entr = 100.0)
+	parameter (v_entr = 300.0)
+	parameter (h_exit = 100.0)
+	parameter (v_exit = 300.0)
 
 ! Math constants
 
