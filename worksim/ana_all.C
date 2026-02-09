@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include <regex>
 
 #include "LookUpTableReader.h"
@@ -18,7 +19,13 @@ void ana_all() {
   std::string target = "lh2";   //lh2/ld2
   TChain *C = new TChain("h10");
   C->Add(Form("%s_kin*_%s_%s.root",process.c_str(),meson.c_str(),target.c_str()));
+  // // Temporary change to try out John's suggestion [05/19/25] | Change 
+  // C->Add("/u/group/c-rsidis/pdbforce/SIMC/simc_gfortran/worksim/sidis18_kin3_q22p2_x0p22_z0p5_thpi8p2_pip_lh2.root");
+  // C->Add("/u/group/c-rsidis/pdbforce/SIMC/simc_gfortran/worksim/pSHMSm2p_sidis18_kin3_q22p2_x0p22_z0p5_thpi8p2_pip_lh2.root");
+  // C->Add("/u/group/c-rsidis/pdbforce/SIMC/simc_gfortran/worksim/pSHMSm4p_sidis18_kin3_q22p2_x0p22_z0p5_thpi8p2_pip_lh2.root");  
+  // C->Add("/u/group/c-rsidis/pdbforce/SIMC/simc_gfortran/worksim/pSHMSm6p_sidis18_kin3_q22p2_x0p22_z0p5_thpi8p2_pip_lh2.root");
 
+  
   // Create a new output file and clone the tree structure
   TFile *outFile = new TFile(Form("%s_allkin_%s_%s.root",
 				  process.c_str(),meson.c_str(),target.c_str()), "RECREATE");
@@ -39,6 +46,10 @@ void ana_all() {
   float Weight;             C->SetBranchAddress("Weight", &Weight);    
 
   // Defining new branch
+  // // Temporary change to try out John's suggestion [05/19/25] | Change 2
+  // int T_pSHMS;         Tout->Branch("pSHMS", &T_pSHMS, "pSHMS/I"); //0=central,-2=central-2%,-4=central-4%,-6=central-6%
+  // int pSHMS;
+  //--
   bool T_deltacut;     Tout->Branch("deltacut", &T_deltacut, "deltacut/O");  
   int T_kin;           Tout->Branch("kin", &T_kin, "kin/I");
   double T_ebeam;      Tout->Branch("ebeam", &T_ebeam, "ebeam/D");  
@@ -50,9 +61,11 @@ void ana_all() {
   double T_thpi;       Tout->Branch("thpi", &T_thpi, "thpi/D");    
   double T_phipi;      Tout->Branch("phipi", &T_phipi, "phipi/D");  
   double T_fweight;    Tout->Branch("fweight", &T_fweight, "fweight/D");  
-  double T_y_lab; Tout->Branch("y_lab", &T_y_lab, "y_lab/D");
-  double T_y_breit;    Tout->Branch("y_breit", &T_y_breit, "y_breit/D");    
-
+  double T_y_lab;      Tout->Branch("y_lab", &T_y_lab, "y_lab/D");
+  double T_y_breit;    Tout->Branch("y_breit", &T_y_breit, "y_breit/D");
+  double T_thetapq_breit;    Tout->Branch("thetapq_breit", &T_thetapq_breit, "thetapq_breit/D");      
+  double T_pt2_breit;  Tout->Branch("pt2_breit", &T_pt2_breit, "pt2_breit/D");
+  
   std::cout << std::endl;
   Long64_t Nevents = C->GetEntries(), nevent=0; 
   double timekeeper=0., timeremains=0.;
@@ -80,8 +93,22 @@ void ana_all() {
       ep = runplan.GetValueByKey(kin,6);
       thec = runplan.GetValueByKey(kin,7)*TMath::DegToRad();      
       thpic = runplan.GetValueByKey(kin,9)*TMath::DegToRad();
+
+      // // Temporary change to try out John's suggestion [05/19/25] | Change 3
+      // //std::cout << hftemp << "\n";
+      // if (hftemp=="/u/group/c-rsidis/pdbforce/SIMC/simc_gfortran/outfiles/sidis18_kin3_q22p2_x0p22_z0p5_thpi8p2_pip_lh2.hist")
+      // 	pSHMS = 0;
+      // else if (hftemp=="/u/group/c-rsidis/pdbforce/SIMC/simc_gfortran/outfiles/pSHMSm2p_sidis18_kin3_q22p2_x0p22_z0p5_thpi8p2_pip_lh2.hist")
+      // 	pSHMS = -2;
+      // else if (hftemp=="/u/group/c-rsidis/pdbforce/SIMC/simc_gfortran/outfiles/pSHMSm4p_sidis18_kin3_q22p2_x0p22_z0p5_thpi8p2_pip_lh2.hist")
+      // 	pSHMS = -4;
+      // else 
+      // 	pSHMS = -6;            
     }
 
+    // // Temporary change to try out John's suggestion [05/19/25] | Change 4
+    // T_pSHMS = pSHMS;
+    
     // calculating physics angles 
     double phiec = 270.*TMath::DegToRad();
     double phipic = 90.*TMath::DegToRad(); // SHMS at beam left => phi=90 deg    
@@ -122,12 +149,14 @@ void ana_all() {
     double beta_mag = q.E()/q.P();
     TVector3 boost_vec = beta_mag * beta_dir;
     //   
-    // TLorentzVector q_breit = q;
-    // q_breit.Boost(-boost_vec);
-    // if (kin==1) {
-    //   std::cout << "q_breit: (" << q_breit.Px() << ", " << q_breit.Py() << ", " << q_breit.Pz() << ", " << q_breit.E() << ")\n";
-    //   std::cout << "q: (" << q.Px() << ", " << q.Py() << ", " << q.Pz() << ", " << q.E() << ")\n";
-    // }
+    TLorentzVector q_breit = q;
+    q_breit.Boost(-boost_vec);
+    if (kin==21) {
+      std::cout << "Kin: " << kin << "\n";
+      std::cout << "Q: " << sqrt(Q2) << " " << "dQ: " << ((sqrt(Q2)-q_breit.Pz())/q_breit.Pz())*100. << "\n";
+      std::cout << "q_breit: (" << q_breit.Px() << ", " << q_breit.Py() << ", " << q_breit.Pz() << ", " << q_breit.E() << ")\n";
+      std::cout << "q: (" << q.Px() << ", " << q.Py() << ", " << q.Pz() << ", " << q.E() << ")\n";
+    }
     //
     TLorentzVector pion_breit = pion_lab;
     pion_breit.Boost(-boost_vec);  // Boost to Breit frame         
@@ -136,6 +165,10 @@ void ana_all() {
     double Epi_breit = pion_breit.E();
     double pipz_breit = pion_breit.Pz();
     double y_breit = 0.5 * log((Epi_breit + pipz_breit) / (Epi_breit - pipz_breit));
+
+    // pt in Breit frame
+    double thetapq_breit = q_breit.Vect().Angle(pion_breit.Vect());
+    double pt2_breit = pow(pion_breit.P()*sin(thetapq_breit),2.);
     // ---
    
     // filling branches
@@ -152,6 +185,8 @@ void ana_all() {
     T_fweight = Weight*(normfac/ngen);
     T_y_lab = y_lab;
     T_y_breit = y_breit;
+    T_thetapq_breit = thetapq_breit;
+    T_pt2_breit = pt2_breit;
     
     Tout->Fill();
   }
