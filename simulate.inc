@@ -59,9 +59,9 @@
 	logical debug(6)
 	integer*4 nevent, ntried, ngen, deForest_flag, Nntu
 	integer*4 ncontribute, npasscuts, ncontribute_no_rad_proton, spect_mode, phsp_mode
-	character base*50
-	character extra_dbase_file*60
-	character tgt_field_file*60
+	character base*100
+	character extra_dbase_file*120
+	character tgt_field_file*120
 	logical using_E_arm_montecarlo, using_P_arm_montecarlo
 	logical doing_phsp, using_rad, hard_cuts
 	logical doing_hyd_elast, doing_deuterium, doing_heavy
