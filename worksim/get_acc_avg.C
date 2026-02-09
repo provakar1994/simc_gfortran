@@ -1,5 +1,7 @@
 #include "TLatex.h"
-#include "LookUpTableReader.h"
+#include "gmn_ana.h"
+
+void PlotPtAccHisto(TH2* h2);
 
 void get_acc_avg() {
   ROOT::RDataFrame df("h10", "sidis18_allkin_pip_lh2.root");  // tree name and file
@@ -60,18 +62,23 @@ void plot_acceptance() {
   LookUpTableReader runplan;
   runplan.readCSV("R-SIDIS_run_plan.csv");
   
-  ROOT::RDataFrame df("h10", "sidis18_allkin_pip_lh2.root");  // tree name and file
+  ROOT::RDataFrame df("h10", "sidis18_allkin_pip_lh2.root");  // tree name and file  
   auto df_new = df
     .Define("xacc","sqrt(pt2)*cos(phipq)")
     .Define("yacc","sqrt(pt2)*sin(phipq)");
-  
-  std::vector<ROOT::RDF::RResultPtr<TH2D>> h2acc1, h2acc2, h2acc3;
+
+  std::vector<TH2F*> h2acc1, h2acc2, h2acc3;
+  // std::vector<ROOT::RDF::RResultPtr<TH2D>> h2acc1, h2acc2, h2acc3;  
   std::vector<ROOT::RDF::RResultPtr<TH1D>> h1acc1, h1acc2, h1acc3;  
 
   std::vector<int> kin1 = {1,3,19,23,26,29}; // Ebeam = 6.5 GeV
   std::vector<int> kin2 = {2,4,5,7,9,11,13,15,20,24,27,30}; // Ebeam = 8.6 GeV
   std::vector<int> kin3 = {6,8,10,12,14,16,17,18,21,22,25,28,31,32,33,34,35,36,37}; // Ebeam = 10.7 GeV
 
+  // std::vector<int> kin1 = {23,26,29}; // Ebeam = 6.5 GeV
+  // std::vector<int> kin2 = {24,27,30}; // Ebeam = 8.6 GeV
+  // std::vector<int> kin3 = {25,28,31,32,33,34,35,36,37}; // Ebeam = 10.7 GeV
+  
   // 6.5 GeV
   for (int kin : kin1) {
     double ebeam = runplan.GetValueByKey(kin,0);    
@@ -82,8 +89,10 @@ void plot_acceptance() {
     
     auto cutName = Form("deltacut&&kin==%d",kin);    
     auto df_cut = df_new.Filter(cutName);
-    auto h2temp = df_cut.Histo2D({Form("h2acc_6p5GeV_kin%d",kin),htitle.c_str(),
-	100,-1,.6,100,-.6,.6},"xacc","yacc","fweight");
+    // auto h2temp = df_cut.Histo2D({Form("h2acc_6p5GeV_kin%d",kin),htitle.c_str(),
+    // 	100,-1,1,100,-1,1},"xacc","yacc","fweight");
+    TH2F *h2temp = (TH2F*)df_cut.Histo2D({Form("h2acc_6p5GeV_kin%d",kin),htitle.c_str(),
+	100,-1,1,100,-1,1},"xacc","yacc","fweight")->Clone();    
     h2temp->SetStats(0);
     h2acc1.push_back(h2temp);
     auto h1temp = df_cut.Histo1D({Form("h1acc_6p5GeV_kin%d",kin),htitle.c_str(),
@@ -102,8 +111,10 @@ void plot_acceptance() {
     
     auto cutName = Form("deltacut&&kin==%d",kin);    
     auto df_cut = df_new.Filter(cutName);
-    auto h2temp = df_cut.Histo2D({Form("h2acc_8p6GeV_kin%d",kin),htitle.c_str(),
-	100,-1,.6,100,-.6,.6},"xacc","yacc","fweight");
+    // auto h2temp = df_cut.Histo2D({Form("h2acc_8p6GeV_kin%d",kin),htitle.c_str(),
+    // 	100,-1,1,100,-1,1},"xacc","yacc","fweight");
+    TH2F *h2temp = (TH2F*)df_cut.Histo2D({Form("h2acc_8p6GeV_kin%d",kin),htitle.c_str(),
+	100,-1,1,100,-1,1},"xacc","yacc","fweight")->Clone();    
     h2temp->SetStats(0);
     h2acc2.push_back(h2temp);
     auto h1temp = df_cut.Histo1D({Form("h1acc_8p6GeV_kin%d",kin),htitle.c_str(),
@@ -122,8 +133,10 @@ void plot_acceptance() {
     
     auto cutName = Form("deltacut&&kin==%d",kin);    
     auto df_cut = df_new.Filter(cutName);    
-    auto h2temp = df_cut.Histo2D({Form("h2acc_10p7GeV_kin%d",kin),htitle.c_str(),
-	100,-1,.6,100,-.6,.6},"xacc","yacc","fweight");
+    // auto h2temp = df_cut.Histo2D({Form("h2acc_10p7GeV_kin%d",kin),htitle.c_str(),
+    // 	100,-1,1,100,-1,1},"xacc","yacc","fweight");
+    TH2F *h2temp = (TH2F*)df_cut.Histo2D({Form("h2acc_10p7GeV_kin%d",kin),htitle.c_str(),
+	100,-1,1,100,-1,1},"xacc","yacc","fweight")->Clone();    
     h2temp->SetStats(0);
     h2acc3.push_back(h2temp);
     auto h1temp = df_cut.Histo1D({Form("h1acc_10p7GeV_kin%d",kin),htitle.c_str(),
@@ -138,9 +151,10 @@ void plot_acceptance() {
   for (size_t i = 0; i < h2acc1.size(); ++i) {
     ckin1->cd(i + 1);
     gPad->SetGridx();
-    gPad->SetGridy();    
+    gPad->SetGridy();
+    PlotPtAccHisto(h2acc1[i]);
     //h2acc1[i]->DrawClone("colz");
-    h1acc1[i]->DrawClone("HIST");    
+    //h1acc1[i]->DrawClone("HIST");    
   }
 
   // Draw histos: Ee = 8.6 GeV
@@ -149,9 +163,10 @@ void plot_acceptance() {
   for (size_t i = 0; i < 6; ++i) {
     ckin2_1->cd(i + 1);
     gPad->SetGridx();
-    gPad->SetGridy();    
+    gPad->SetGridy();
+    PlotPtAccHisto(h2acc2[i]);
     //h2acc2[i]->DrawClone("colz");
-    h1acc2[i]->DrawClone("HIST");    
+    //h1acc2[i]->DrawClone("HIST");    
   }
   //
   TCanvas *ckin2_2 = new TCanvas("ckin2_2","kin2_2",1200,900);
@@ -159,9 +174,10 @@ void plot_acceptance() {
   for (size_t i = 0; i < 6; ++i) {
     ckin2_2->cd(i + 1);
     gPad->SetGridx();
-    gPad->SetGridy();    
+    gPad->SetGridy();
+    PlotPtAccHisto(h2acc2[i+6]);
     //h2acc2[i+6]->DrawClone("colz");
-    h1acc2[i+6]->DrawClone("HIST");    
+    //h1acc2[i+6]->DrawClone("HIST");    
   }
 
   // Draw histos: Ee = 10.7 GeV
@@ -170,9 +186,10 @@ void plot_acceptance() {
   for (size_t i = 0; i < 6; ++i) {
     ckin3_1->cd(i + 1);
     gPad->SetGridx();
-    gPad->SetGridy();    
+    gPad->SetGridy();
+    PlotPtAccHisto(h2acc3[i]);
     //h2acc3[i]->DrawClone("colz");
-    h1acc3[i]->DrawClone("HIST");    
+    //h1acc3[i]->DrawClone("HIST");    
   }
   //
   TCanvas *ckin3_2 = new TCanvas("ckin3_2","kin3_2",1200,900);
@@ -180,9 +197,10 @@ void plot_acceptance() {
   for (size_t i = 0; i < 6; ++i) {
     ckin3_2->cd(i + 1);
     gPad->SetGridx();
-    gPad->SetGridy();    
+    gPad->SetGridy();
+    PlotPtAccHisto(h2acc3[i+6]);
     //h2acc3[i+6]->DrawClone("colz");
-    h1acc3[i+6]->DrawClone("HIST");    
+    //h1acc3[i+6]->DrawClone("HIST");    
   }
   //
   TCanvas *ckin3_3 = new TCanvas("ckin3_3","kin3_3",1200,900);
@@ -190,9 +208,10 @@ void plot_acceptance() {
   for (size_t i = 0; i < 6; ++i) {
     ckin3_3->cd(i + 1);
     gPad->SetGridx();
-    gPad->SetGridy();    
+    gPad->SetGridy();
+    PlotPtAccHisto(h2acc3[i+12]);
     //h2acc3[i+12]->DrawClone("colz");
-    h1acc3[i+12]->DrawClone("HIST");    
+    //h1acc3[i+12]->DrawClone("HIST");    
   }
   //
   TCanvas *ckin3_4 = new TCanvas("ckin3_4","kin3_4",1200,900);
@@ -200,9 +219,10 @@ void plot_acceptance() {
   for (size_t i = 0; i < 1; ++i) {
     ckin3_4->cd(i + 1);
     gPad->SetGridx();
-    gPad->SetGridy();    
+    gPad->SetGridy();
+    PlotPtAccHisto(h2acc3[i+18]);
     //h2acc3[i+18]->DrawClone("colz");
-    h1acc3[i+18]->DrawClone("HIST");    
+    //h1acc3[i+18]->DrawClone("HIST");    
   }
 
   //char const * outfilebase = Form("output_plot_acceptance");
@@ -217,5 +237,67 @@ void plot_acceptance() {
   ckin3_2->SaveAs(Form("%s.pdf",outfilebase)); ckin3_2->Write();
   ckin3_3->SaveAs(Form("%s.pdf",outfilebase)); ckin3_3->Write();
   ckin3_4->SaveAs(Form("%s.pdf",outfilebase)); ckin3_4->Write();    
-  ckin3_4->SaveAs(Form("%s.pdf]",outfilebase));      
+  ckin3_4->SaveAs(Form("%s.pdf]",outfilebase));
+
+  // P_T acceptance for all the kinematics combined (Added on 09/17/25)
+  TCanvas *cptaccall = util_pd::TC("cptaccall",1,1);
+  gStyle->SetPalette(kRainbow);
+  cptaccall->SetLogz();
+  // TH2F *h2ptaccall = (TH2F*)df_new.Filter("deltacut").Histo2D({"h2acc_all_kin","",
+  //     100,-1,1,100,-1,1},"xacc","yacc","fweight")->Clone();  
+  // TH2F *h2ptaccall = (TH2F*)df_new.Filter("deltacut&&(kin==23||kin==26||kin==29)").Histo2D({"h2acc_all_kin","",
+  //     100,-1,1,100,-1,1},"xacc","yacc","fweight")->Clone();
+  // TH2F *h2ptaccall = (TH2F*)df_new.Filter("deltacut&&(kin==24||kin==27||kin==30)").Histo2D({"h2acc_all_kin","",
+  //     100,-1,1,100,-1,1},"xacc","yacc","fweight")->Clone();
+  TH2F *h2ptaccall = (TH2F*)df_new.Filter("deltacut&&(kin>=31)").Histo2D({"h2acc_all_kin","",
+      100,-1,1,100,-1,1},"xacc","yacc","fweight")->Clone();  
+  PlotPtAccHisto(h2ptaccall);
+  //cptaccall->SaveAs("ptAccAll.png");
+  cptaccall->SaveAs("ptAccAll_x0p44_ebeam10p7.png");
+}
+
+
+//----------------------------------------------------------
+void PlotPtAccHisto(TH2* h2) {
+  /* Special function to plot P_T acceptance histo */
+  h2->SetStats(0);
+  h2->GetXaxis()->SetRangeUser(-1, 1);
+  h2->GetYaxis()->SetRangeUser(-1, 1);
+  h2->GetXaxis()->SetLabelSize(0);  // hide default tick labels
+  h2->GetYaxis()->SetLabelSize(0);
+  h2->Draw("COL");
+  
+  // Draw vertical and horizontal lines
+  TLine *lx = new TLine(-1, 0, 1, 0);
+  TLine *ly = new TLine(0, -1, 0, 1);
+  lx->SetLineColor(kGray+2); ly->SetLineColor(kGray+2);
+  lx->Draw(); ly->Draw();
+
+  // Draw circular guides and labels
+  TLatex* label = new TLatex();
+  label->SetTextSize(0.025);  // small, unobtrusive
+  label->SetTextColor(kRed);
+  label->SetTextAlign(12);    // left-bottom alignment
+
+  for (double r : {0.2, 0.4, 0.6, 0.8}) {
+    TEllipse *circle = new TEllipse(0, 0, r);
+    circle->SetFillStyle(0);
+    circle->SetLineStyle(2);
+    circle->SetLineWidth(2);    
+    circle->SetLineColor(kGray+2);
+    circle->Draw();
+
+    // Label each circle near the top-right quadrant
+    double x = r / sqrt(2), y = r / sqrt(2);
+    label->DrawLatex(x + 0.02, y + 0.02, Form("P_{T} = %.1f GeV", r));
+  }
+
+  // Draw angular labels
+  TLatex* t = new TLatex();
+  t->SetTextAlign(22);
+  t->SetTextSize(0.035);
+  t->DrawLatex(1.1, 0, "#phi_{h}=0#circ");
+  t->DrawLatex(0, 1.08, "#phi_{h}=90#circ");
+  t->DrawLatex(-1.12, 0, "#phi_{h}=180#circ");
+  t->DrawLatex(0, -1.08, "#phi_{h}=270#circ");
 }
