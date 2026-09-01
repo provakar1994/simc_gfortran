@@ -25,7 +25,7 @@ C Ntuple ID stuff
       integer*4 recl,status, cycle, bank
 
       character*16 NtupleTag(80)
-      character*80 rawname,filename,ntfilename,directory
+      character*200 rawname,filename,ntfilename,directory
       character*16 title
       integer io,i,j,check
       integer chanout
@@ -99,5 +99,4 @@ c now loop over events
       enddo ! loop over events
 
       end
-
 

@@ -2,7 +2,7 @@
 C     Program to convert simc .bin file to root tree
       implicit none
 
-      character*80 rawname,filename,treefilename
+      character*200 rawname,filename,treefilename
       character*16 NtupleTag(80),varname
       
 
@@ -56,5 +56,4 @@ c now loop over events
       call RootNTOutp();
 
       end
-
 

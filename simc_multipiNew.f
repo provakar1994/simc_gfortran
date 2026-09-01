@@ -28,8 +28,8 @@
 	real*8		domega_e, domega_p !populated e/hadron solid angles.
 	logical		success
 	logical		pass_cuts
-	character	filename*80, genfile*80, histfile*80, timestring1*30
-	character	timestring2*30,genifile*80
+	character	filename*200, genfile*200, histfile*200, timestring1*30
+	character	timestring2*30,genifile*200
 	type(event)::		vertex, vertex0, orig, recon
 	type(event_main)::	main
 	type(contribtype)::	contrib
