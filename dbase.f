@@ -56,8 +56,8 @@ c	include 'histograms.inc'
 	integer*4 i, j, k, ii
 	integer*4 ierr, thload, thbook
 	logical success
-	character filename*80,tmpfile*80
-	character dbase_file*60 !needs to be shorter than filename
+	character filename*200,tmpfile*200
+	character dbase_file*180 !needs to be shorter than filename
 
 	type (histograms):: H
 
@@ -88,7 +88,7 @@ c	include 'histograms.inc'
 	  i=index(filename,' ')
 	  if(i+2.le.len(filename)) write(filename(i:),'(''.inp'')')
 	endif
-	write(6,'(a10,a69)')'filename=',filename
+	write(6,'(a10,a)')'filename=',filename
 	if (i.gt.1) base=filename(j+1:i-1)
         write(start_random_state_file,'(a)') 'outfiles/'//filename(j+1:i-1)//'_start_random_state.dat'
 
@@ -109,7 +109,7 @@ c	include 'histograms.inc'
 	    i=index(filename,' ')
 	    i f(i+2.le.len(filename)) write(filename(i:),'(''.inp'')')
 	  endif
-	  write(6,'(a10,a69)')'filename=',filename
+	  write(6,'(a10,a)')'filename=',filename
 	  ierr = thload(filename)
 	  if (ierr.ne.0) stop ' Loading problem!  Not going to try again...wouldnt be prudent.'
 	  ierr = thbook()
