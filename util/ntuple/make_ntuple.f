@@ -51,7 +51,13 @@ c input filename
       i=index(rawname,' ')
       filename='../../worksim/'//rawname(1:i-1)//'.bin'
       write(6,*) 'opening file: ',filename
-      open(io,file=filename,form="unformatted",access="sequential")
+      open(io,file=filename,form="unformatted",access="sequential",
+     >     status="old",iostat=check)
+      if (check.ne.0) then
+         write(6,*) 'ERROR opening file: ',filename
+         write(6,*) 'iostat = ',check
+         stop 1
+      endif
 
 c output filename
       ntfilename='../../worksim/'//rawname(1:i-1)//'.rzdat'
@@ -64,7 +70,17 @@ c output filename
 	endif
 
 
-      read(io) NtupleSize
+      read(io,iostat=check) NtupleSize
+      if (check.ne.0) then
+         write(6,*) 'ERROR reading NtupleSize from: ',filename
+         write(6,*) 'iostat = ',check
+         stop 1
+      endif
+      if (NtupleSize.lt.1 .or. NtupleSize.gt.80) then
+         write(6,*) 'ERROR invalid NtupleSize = ',NtupleSize
+         write(6,*) 'Input file may be corrupt or stale.'
+         stop 1
+      endif
 
       write(6,*) 'Variables in output file:'
       do i=1,NtupleSize
@@ -99,4 +115,3 @@ c now loop over events
       enddo ! loop over events
 
       end
-
